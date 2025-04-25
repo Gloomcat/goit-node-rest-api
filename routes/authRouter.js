@@ -1,8 +1,9 @@
 import express from "express";
 
 import validateBody from "../helpers/validateBody.js";
+import validateUser from "../helpers/validateUser.js";
 import authSchema from "../schemas/authSchemas.js";
-import authController from "../controllers/authControllers.js"
+import authController from "../controllers/authControllers.js";
 
 const authRouter = express.Router();
 
@@ -16,5 +17,6 @@ authRouter.post(
   validateBody(authSchema.authSchema),
   authController.login
 );
+authRouter.post("/logout", validateUser, authController.logout);
 
 export default authRouter;

@@ -23,12 +23,7 @@ const saveUser = async (data) => {
   return User.create({ ...data, password: hashPassword });
 };
 
-const updateUserToken = async (email, token) => {
-  const user = await findUserByEmail(email);
-  if (!user) {
-    return null;
-  }
-
+const updateUserToken = async (user, token) => {
   return user.update({ token: token });
 };
 

@@ -20,7 +20,7 @@ const validateUser = (req, _, next) => {
   }
 
   const user = authService.findUserById(payload.id);
-  if (!user) {
+  if (!user || user.token !== token) {
     return next(HttpError(401, "Not authorized"));
   }
 

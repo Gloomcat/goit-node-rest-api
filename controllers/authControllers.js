@@ -38,7 +38,7 @@ const login = async (req, res) => {
   };
 
   const token = jwt_helpers.createToken(payload);
-  await authService.updateUserToken(email, token);
+  await authService.updateUserToken(user, token);
 
   res.json({
     token: token,
@@ -49,7 +49,15 @@ const login = async (req, res) => {
   });
 };
 
+const logout = async (req, res) => {
+  const user = await req.user;
+  await authService.updateUserToken(user, "");
+
+  res.status(204).json();
+};
+
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
+  logout: ctrlWrapper(logout),
 };
