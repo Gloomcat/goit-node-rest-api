@@ -22,6 +22,8 @@ const Contact = sequelize.define(
     },
 });
 
-Contact.sync();
+
+// Creation of missing table and/or try soft fix of columns if they are incorrect
+Contact.sync({ alter: true });
 
 export default Contact;
