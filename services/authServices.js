@@ -15,7 +15,17 @@ const saveUser = async (data) => {
   return User.create({ ...data, password: hashPassword });
 };
 
+const updateUserToken = async (email, token) => {
+  const user = await findUser(email);
+  if (!user) {
+    return null;
+  }
+
+  return user.update({ token: token });
+};
+
 export default {
   findUser,
   saveUser,
+  updateUserToken,
 };
