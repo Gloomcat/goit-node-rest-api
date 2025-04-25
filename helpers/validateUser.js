@@ -3,7 +3,7 @@ import HttpError from "./HttpError.js";
 import authService from "../services/authServices.js";
 import jwt_helpers from "./jwt.js"
 
-const validateUser = (req, _, next) => {
+const validateUser = async (req, _, next) => {
   const { authorization } = req.headers;
   if (!authorization) {
     return next(HttpError(401, "Not authorized"));
@@ -19,7 +19,7 @@ const validateUser = (req, _, next) => {
     return next(HttpError(401, "Not authorized"));
   }
 
-  const user = authService.findUserById(payload.id);
+  const user = await authService.findUserById(payload.id);
   if (!user || user.token !== token) {
     return next(HttpError(401, "Not authorized"));
   }

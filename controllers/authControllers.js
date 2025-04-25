@@ -50,14 +50,21 @@ const login = async (req, res) => {
 };
 
 const logout = async (req, res) => {
-  const user = await req.user;
-  await authService.updateUserToken(user, "");
+  await authService.updateUserToken(req.user, "");
 
   res.status(204).json();
+};
+
+const current = async (req, res) => {
+  res.json({
+    email: req.user.email,
+    subscription: req.user.subscription,
+  });
 };
 
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   logout: ctrlWrapper(logout),
+  current: ctrlWrapper(current),
 };
