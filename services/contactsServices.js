@@ -35,10 +35,28 @@ const updateContact = async (id, data) => {
   });
 };
 
+const updateStatusContact = async (id, data) => {
+  const contact = await getContactById(id);
+  if (!contact) {
+    return null;
+  }
+
+  const { favorite } = data;
+  return contact.update(
+    {
+      favorite: favorite,
+    },
+    {
+      returning: true,
+    }
+  );
+};
+
 export default {
   listContacts,
   getContactById,
   removeContact,
   addContact,
   updateContact,
+  updateStatusContact,
 };
