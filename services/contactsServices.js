@@ -1,15 +1,25 @@
+import { where } from "sequelize";
 import Contact from "../db/models/Contact.js";
 
-const listContacts = () => {
-  return Contact.findAll();
+const listContacts = (owner) => {
+  return Contact.findAll({
+    where: {
+      owner,
+    },
+  });
 };
 
-const getContactById = (id) => {
-  return Contact.findByPk(id);
+const getContactById = (owner, id) => {
+  return Contact.findOne({
+    where: {
+      id,
+      owner,
+    },
+  });
 };
 
-const removeContact = async (id) => {
-  const contact = await getContactById(id);
+const removeContact = async (owner, id) => {
+  const contact = await getContactById(owner, id);
   if (!contact) {
     return null;
   }
@@ -24,8 +34,8 @@ const addContact = (data) => {
   return Contact.create(data);
 };
 
-const updateContact = async (id, data) => {
-  const contact = await getContactById(id);
+const updateContact = async (owner, id, data) => {
+  const contact = await getContactById(owner, id);
   if (!contact) {
     return null;
   }
@@ -35,8 +45,8 @@ const updateContact = async (id, data) => {
   });
 };
 
-const updateStatusContact = async (id, data) => {
-  const contact = await getContactById(id);
+const updateStatusContact = async (owner, id, data) => {
+  const contact = await getContactById(owner, id);
   if (!contact) {
     return null;
   }

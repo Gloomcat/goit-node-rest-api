@@ -1,9 +1,12 @@
 import express from "express";
 import contactController from "../controllers/contactsControllers.js";
 import validateBody from "../helpers/validateBody.js";
+import validateUser from "../helpers/validateUser.js";
 import contactSchema from "../schemas/contactsSchemas.js";
 
 const contactsRouter = express.Router();
+
+contactsRouter.use(validateUser);
 
 contactsRouter.get("/", contactController.getAllContacts);
 

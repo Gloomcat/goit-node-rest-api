@@ -3,6 +3,7 @@ import morgan from "morgan";
 import cors from "cors";
 
 import _ from "./db/Sequelize.js";
+
 import contactsRouter from "./routes/contactsRouter.js";
 import authRouter from "./routes/authRouter.js";
 

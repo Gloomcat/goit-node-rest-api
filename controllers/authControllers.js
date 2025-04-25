@@ -2,12 +2,12 @@ import authService from "../services/authServices.js";
 
 import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
-import createToken from "../helpers/jwt.js";
+import jwt_helpers from "../helpers/jwt.js";
 import compareHash from "../helpers/compareHash.js";
 
 const register = async (req, res) => {
   const { email } = req.body;
-  const user = await authService.findUser(email);
+  const user = await authService.findUserByEmail(email);
   if (user) {
     throw HttpError(409, "Email in use");
   }
@@ -24,7 +24,7 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-  const user = await authService.findUser(email);
+  const user = await authService.findUserByEmail(email);
   if (!user) {
     throw HttpError(401, "Email or password is wrong");
   }
@@ -33,12 +33,11 @@ const login = async (req, res) => {
     throw HttpError(401, "Email or password is wrong");
   }
 
-  const { _id: id } = user;
   const payload = {
-    id,
+    id: user.id,
   };
 
-  const token = createToken(payload);
+  const token = jwt_helpers.createToken(payload);
   await authService.updateUserToken(email, token);
 
   res.json({

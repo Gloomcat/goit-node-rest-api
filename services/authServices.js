@@ -2,10 +2,18 @@ import bcrypt from "bcryptjs";
 
 import User from "../db/models/User.js";
 
-const findUser = (email) => {
+const findUserByEmail = (email) => {
   return User.findOne({
     where: {
       email,
+    },
+  });
+};
+
+const findUserById = (id) => {
+  return User.findOne({
+    where: {
+      id,
     },
   });
 };
@@ -16,7 +24,7 @@ const saveUser = async (data) => {
 };
 
 const updateUserToken = async (email, token) => {
-  const user = await findUser(email);
+  const user = await findUserByEmail(email);
   if (!user) {
     return null;
   }
@@ -25,7 +33,8 @@ const updateUserToken = async (email, token) => {
 };
 
 export default {
-  findUser,
+  findUserByEmail,
+  findUserById,
   saveUser,
   updateUserToken,
 };
