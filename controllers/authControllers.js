@@ -1,9 +1,15 @@
-import authService from "../services/authServices.js";
+import fs from "node:fs";
+import path from "node:path";
 
+import gravatar from "gravatar";
+
+import authService from "../services/authServices.js";
 import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
 import jwt_helpers from "../helpers/jwt.js";
 import compareHash from "../helpers/compareHash.js";
+
+const avatarsDir = path.resolve("public", "avatars");
 
 const register = async (req, res) => {
   const { email } = req.body;
@@ -12,12 +18,14 @@ const register = async (req, res) => {
     throw HttpError(409, "Email in use");
   }
 
-  const newUser = await authService.saveUser(req.body);
+  const avatarURL = gravatar.url(email, { s: 200, d: "retro" }, true);
+  const newUser = await authService.saveUser({ ...req.body, avatarURL });
 
   res.status(201).json({
     user: {
       email: newUser.email,
       subscription: newUser.subscription,
+      avatarURL: newUser.avatarURL,
     },
   });
 };
@@ -45,6 +53,7 @@ const login = async (req, res) => {
     user: {
       email: user.email,
       subscription: user.subscription,
+      avatarURL: user.avatarURL,
     },
   });
 };
@@ -62,9 +71,30 @@ const current = async (req, res) => {
   });
 };
 
+const avatars = async (req, res) => {
+  let avatar = null;
+  if (req.file) {
+    const { path: oldPath, filename } = req.file;
+    const newPath = path.join(avatarsDir, filename);
+    await fs.rename(oldPath, newPath, (error) => {
+      if (error) {
+        throw error;
+      }
+    });
+    avatar = path.join("avatars", filename);
+  }
+
+  await authService.updateUserAvatar(req.user, avatar);
+
+  res.json({
+    avatarURL: avatar,
+  });
+};
+
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   logout: ctrlWrapper(logout),
   current: ctrlWrapper(current),
+  avatars: ctrlWrapper(avatars),
 };

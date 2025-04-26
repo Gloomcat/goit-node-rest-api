@@ -27,9 +27,14 @@ const updateUserToken = async (user, token) => {
   return user.update({ token: token });
 };
 
+const updateUserAvatar = async (user, avatar) => {
+  return user.update({ avatar: avatar });
+};
+
 export default {
   findUserByEmail,
   findUserById,
   saveUser,
   updateUserToken,
+  updateUserAvatar,
 };
