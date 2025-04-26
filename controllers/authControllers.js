@@ -81,7 +81,7 @@ const avatars = async (req, res) => {
         throw error;
       }
     });
-    avatar = path.join("avatars", filename);
+    avatar = `/avatars/${filename}`;
   }
 
   await authService.updateUserAvatar(req.user, avatar);
