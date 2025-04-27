@@ -11,6 +11,14 @@ const authSchema = Joi.object({
   }),
 });
 
+const authVerifySchema = Joi.object({
+  email: Joi.string().email().required().messages({
+    "string.email": "email must be a valid format (e.g., name.second@sub.dom).",
+    "any.required": "email is required.",
+  }),
+});
+
 export default {
   authSchema,
+  authVerifySchema,
 };
